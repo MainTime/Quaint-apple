@@ -1,18 +1,43 @@
-let doorLocs = []
-let usedNumbers = []
-let cd
-let currentHover 
+// A Christmas calender made by MainTime
+// More about it on https://github.com/MainTime/Quaint-apple/
 
-let stuffInDoors
 
+// Servicable Part
 const spaceFromTop = 125
 const doorSpacing = 225
 const itemSize = 175
 const itemsInARow = 8
 const randomShiftVal = 40
 const randomSizeVal = 10
+const offset = 350
 
+const motd = ['I love you Anne', 'Fröhliche Weihnachten Anne']
 const url = 'https://maintime.github.io/Quaint-apple'
+const lineDashes = [7, 5]
+
+//Snow(not my creation)
+//somewhere down there
+
+/** @license
+ * DHTML Snowstorm! JavaScript-based snow for web pages
+ * Making it snow on the internets since 2003. You're welcome.
+ * -----------------------------------------------------------
+ * Version 1.44.20131208 (Previous rev: 1.44.20131125)
+ * Copyright (c) 2007, Scott Schiller. All rights reserved.
+ * Code provided under the BSD License
+ * http://schillmania.com/projects/snowstorm/license.txt
+ */
+
+
+// Dont change anything without analysing how it works
+
+let doorLocs = []
+let usedNumbers = []
+let cd
+let currentHover 
+let stuffInDoors
+let textAlpha = 255
+let motdIndex
 
 function preload() {
   
@@ -53,7 +78,7 @@ function setup() {
   doorLocs.push([(doorLocs.length - itemsInARow * n) * doorSpacing + 100 + randomShift(), spaceFromTop + n * doorSpacing + randomShift(), itemSize - randomSize()[0], itemSize - randomSize()[1], 25,getRandomNum()])
   doorLocs.push([(doorLocs.length - itemsInARow * n) * doorSpacing + 100 + randomShift(), spaceFromTop + n * doorSpacing + randomShift(), itemSize - randomSize()[0], itemSize - randomSize()[1], 25,getRandomNum()])
 
-
+  motdIndex = round(random(0,motd.length-1))
 }
 
 function draw() { 
@@ -76,10 +101,15 @@ function draw() {
     textSize(84);
     textAlign(CENTER);
     textFont('Cookie');
-
-    text('Fröhliche Weihnachten Anne', 0, windowHeight / 2 - 40, windowWidth, windowHeight)
-
-
+    stroke(80,80,80,textAlpha)
+    fill(255,255,255,textAlpha)
+    text(motd[motdIndex], 0, windowHeight / 2 - 40, windowWidth, windowHeight)
+    if (textAlpha > 0) {
+      textAlpha -= 5
+    } 
+        stroke(80,80,80,255-textAlpha)
+    fill(255,255,255,255-textAlpha)
+      text('noch '+ (24 - day()) + ' Tage' , 0, windowHeight / 2 - 40 - 360, windowWidth, windowHeight)
   }
 }
 
@@ -108,7 +138,7 @@ function christmasDoor(x, y, w, h, r, num) {
   stroke(200, 200, 200, 90)
   textAlign(CENTER)
   stroke(80)
-  drawingContext.setLineDash([7, 5]);
+  drawingContext.setLineDash(lineDashes);
   if (num <= day()) {
 
     fill(255)
@@ -169,49 +199,28 @@ function mouseClicked() {
     
     let doorNumber = doorLocs[currentHover][5]
     let neededData = stuffInDoors[doorNumber - 1]
-    
+    if (doorNumber <= day()) {
     if(neededData[1] != 'TYPE') {
-      
-      if(neededData[1] == 'IMAGE') {
+      if(neededData[1] != 'VIDEO') {
         console.log(url + neededData[0])
         showModal(url + neededData[0])
+      } else {
+        window.location.href = neededData[0]
       }
-      
-      if(neededData[1] == 'VIDEO') {
-        console.log('<iframe width="961" height="721" src="'+neededData[0]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
-      }
+    }
     }
   }
 }
 
 function showModal(url) {
   var modal = document.getElementById("myModal");
-  var modalImg = url
-  //var captionText = document.getElementById("caption");
   modal.style.display = "block";
-  modalImg.src = this.src;
-
-  // Get the <span> element that closes the modal
+  document.getElementById('img01').src=url
   var span = document.getElementsByClassName("close")[0];
-
-  // When the user clicks on <span> (x), close the modal
   span.onclick = function() { 
   modal.style.display = "none";
   }
 }
-
-/** @license
- * DHTML Snowstorm! JavaScript-based snow for web pages
- * Making it snow on the internets since 2003. You're welcome.
- * -----------------------------------------------------------
- * Version 1.44.20131208 (Previous rev: 1.44.20131125)
- * Copyright (c) 2007, Scott Schiller. All rights reserved.
- * Code provided under the BSD License
- * http://schillmania.com/projects/snowstorm/license.txt
- */
-
-/*jslint nomen: true, plusplus: true, sloppy: true, vars: true, white: true */
-/*global window, document, navigator, clearInterval, setInterval */
 
 var snowStorm = (function(window, document) {
 
